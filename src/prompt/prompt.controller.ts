@@ -2,12 +2,18 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PromptService } from './prompt.service';
 import { CreatePromptDto } from './dto/create-prompt.dto';
 import { UpdatePromptDto } from './dto/update-prompt.dto';
+import { ApiOperation, ApiProperty } from '@nestjs/swagger';
 
 @Controller('prompt')
 export class PromptController {
-  constructor(private readonly promptService: PromptService) {}
+  constructor(private readonly promptService: PromptService) { }
 
   @Post()
+  @ApiOperation(
+    {
+      summary: "Envie el Prompt"
+    }
+  )
   create(@Body() createPromptDto: CreatePromptDto) {
     return this.promptService.create(createPromptDto);
   }

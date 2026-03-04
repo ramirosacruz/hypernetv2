@@ -1,15 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Put } from '@nestjs/common';
 import { NodesService } from './nodes.service';
 import { CreateNodeDto } from './dto/create-node.dto';
 import { UpdateNodeDto } from './dto/update-node.dto';
+import { CreateGraphDto } from './dto/create-graph.dto';
 
 @Controller('nodes')
 export class NodesController {
-  constructor(private readonly nodesService: NodesService) {}
+  constructor(private readonly nodesService: NodesService) { }
+  @Get('migrates')
+  migrate() {
+    return this.nodesService.migrate();
+  }
 
-  @Get('graph')
-  getGraph() {
-    return this.nodesService.getGraph();
+  @Post("graph")
+  createGraph(@Body() createNodeDto: CreateGraphDto) {
+    return this.nodesService.createGraph(createNodeDto);
+  }
+  @Post('graph/:id/publish')
+  publish(@Param("id") id: number) {
+    return this.nodesService.publish(id);
+  }
+
+  @Get('graph/:id/version-current')
+  getGraphVersionCurrent(@Param("id") id: number) {
+    return this.nodesService.getGraphVersionCurrent(id);
+  }
+
+  @Get('graphs')
+  findAllGraphs() {
+    return this.nodesService.findAllGraphs();
+  }
+  @Get('graph-versions')
+  getGraphVersions() {
+    return this.nodesService.getGraphVersions();
+  }
+
+  @Get('graph/:id')
+  getGraph(@Param("id") id: number) {
+    return this.nodesService.getGraph(id);
   }
 
   @Post()
@@ -17,21 +45,11 @@ export class NodesController {
     return this.nodesService.create(createNodeDto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateNodeDto: UpdateNodeDto) {
     return this.nodesService.update(+id, updateNodeDto);
   }
 
-  @Post('connect')
-  connect(@Body() data: { sourceId: number; targetId: number; condition: string }) {
-    return this.nodesService.connect(data.sourceId, data.targetId, data.condition);
-  }
-
-  @Delete('connect/:edgeId')
-  @HttpCode(204)
-  disconnect(@Param('edgeId') edgeId: string) {
-    return this.nodesService.disconnect(+edgeId);
-  }
 
   @Delete(':id')
   @HttpCode(204)

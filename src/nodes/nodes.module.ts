@@ -4,11 +4,13 @@ import { NodesController } from './nodes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Node } from './entities/Node';
 import { NodeState } from './entities/NodeState';
-import { Edge } from './entities/Edge';
+import { Graph } from './entities/Graph';
+import { GraphVersion } from './entities/GraphVersion';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Node, NodeState, Edge])],
+  imports: [TypeOrmModule.forFeature([Node, NodeState, GraphVersion, Graph])],
   controllers: [NodesController],
   providers: [NodesService],
+  exports: [NodesService]
 })
-export class NodesModule {}
+export class NodesModule { }
